@@ -10,9 +10,7 @@ const myFS = require('../utils/files');
 
 
 // Repository
-const Events = require('../repository/Events');
-const Providers = require('../repository/Providers');
-const Clients = require('../repository/Clients');
+const Services = require('../repository/Services');
 
 // Token
 const Token = require('../services/Token');
@@ -31,12 +29,12 @@ app.use(bodyParser.urlencoded({
     type: 'application/x-www-form-urlencoding'
 }));
 const router = express.Router();
-const baseImagePath = '/images/events';
+const baseImagePath = '/images/services';
 
 
 /**
  * POST: Create.
- * Request: { "nombre": String, "descripcion": String, "fecha": Number, "activo": Number, "client": Client }
+ * Request: { "nombre": String }
  * Response: { "ok": Boolean }
  * Response Error: { "ok": Boolean, "error": String }
  *
@@ -50,7 +48,7 @@ router.post('/', (req, res) => {
         if (dataToken) {
 
             if (dataToken.exp < new Date().getTime()) {
-                Events.register(req.body)
+                Services.register(req.body)
                     .then(() => {
                         return message = {
                             ok: true
@@ -60,7 +58,7 @@ router.post('/', (req, res) => {
                         res.status(200).send(message);
                     })
                     .catch(err => {
-                        let data = {ok: false, error: "Event couldn't be registered"};
+                        let data = {ok: false, error: "Service couldn't be registered"};
                         console.log(err);
                         res.status(400).send(data);
                     });
@@ -86,118 +84,8 @@ router.post('/', (req, res) => {
 });
 
 /**
- * PUT: Event providers.
- * Response: { "ok": Boolean }
- * Response Error: { "ok": Boolean, "error": String }
- *
- */
-router.put('/:_id/providers', (req, res) => {
-
-    if (req.headers['authorization'] != null) {
-        const token = req.headers['authorization'].replace('Bearer ', '');
-        const dataToken = Token.validateToken(token);
-
-        if (dataToken) {
-
-            if (dataToken.exp < new Date().getTime()) {
-                if (Number(req.params._id) === Number(req.body.id)) {
-
-                    Events.updateEventProviders(req.body)
-                        .then(() => {
-                            return {
-                                ok: true
-                            };
-                        })
-                        .then(message => {
-                            res.status(200).send(message);
-                        })
-                        .catch(err => {
-                            let data = {ok: false, error: "Error updating event provider."};
-                            console.log(err);
-                            res.status(400).send(data);
-                        });
-
-                }
-
-            } else {
-
-                let data = {ok: false, error: "Token expired"};
-                res.status(403).send(data);
-
-            }
-        } else {
-
-            let data = {ok: false, error: "Token is not correct"};
-            res.status(403).send(data);
-
-        }
-    } else {
-
-        let data = {ok: false, error: "Token is not correct"};
-        res.status(403).send(data);
-
-    }
-
-});
-
-/**
- * PUT: Event clients.
- * Response: { "ok": Boolean }
- * Response Error: { "ok": Boolean, "error": String }
- *
- */
-router.put('/:_id/clients', (req, res) => {
-
-    if (req.headers['authorization'] != null) {
-        const token = req.headers['authorization'].replace('Bearer ', '');
-        const dataToken = Token.validateToken(token);
-
-        if (dataToken) {
-
-            if (dataToken.exp < new Date().getTime()) {
-                if (Number(req.params._id) === Number(req.body.id)) {
-
-                    Events.updateEventClients(req.body)
-                        .then(() => {
-                            return {
-                                ok: true
-                            };
-                        })
-                        .then(message => {
-                            res.status(200).send(message);
-                        })
-                        .catch(err => {
-                            let data = {ok: false, error: "Error updating event provider."};
-                            console.log(err);
-                            res.status(400).send(data);
-                        });
-
-                }
-
-            } else {
-
-                let data = {ok: false, error: "Token expired"};
-                res.status(403).send(data);
-
-            }
-        } else {
-
-            let data = {ok: false, error: "Token is not correct"};
-            res.status(403).send(data);
-
-        }
-    } else {
-
-        let data = {ok: false, error: "Token is not correct"};
-        res.status(403).send(data);
-
-    }
-
-});
-
-/**
- * PUT: Event.
- * Response: { "ok": Boolean, event: Event }
+ * PUT: Service.
+ * Response: { "ok": Boolean, service: Service }
  * Response Error: { "ok": Boolean, "error": String }
  *
  */
@@ -208,49 +96,33 @@ router.put('/:_id', (req, res) => {
         const dataToken = Token.validateToken(token);
 
         if (dataToken) {
-
             if (dataToken.exp < new Date().getTime()) {
                 if (Number(req.params._id) === Number(req.body.id)) {
 
-                    Events.findById(req.params._id)
+                    Services.findById(req.params._id)
                         .then(result => {
                             if (result.length === 0) {
-                                let data = {ok: false, error: "Event doesn't exists"};
+                                let data = {ok: false, error: "Service doesn't exists"};
                                 console.log(err);
                                 res.status(400).send(data);
                             } else {
-                                const dataEvent = result[0];
+                                const dataService = result[0];
                                 if (req.body.nombre != null) {
-                                    dataEvent.nombre = req.body.nombre;
-                                }
-                                if (req.body.descripcion != null) {
-                                    dataEvent.descripcion = req.body.descripcion;
-                                }
-                                if (req.body.fecha != null) {
-                                    dataEvent.fecha = req.body.fecha;
-                                }
-                                if (req.body.activo != null) {
-                                    dataEvent.activo = req.body.activo;
-                                }
-                                if (req.body.proveedores != null) {
-                                    dataEvent.proveedores = req.body.proveedores;
-                                }
-                                if (req.body.clientes != null) {
-                                    dataEvent.clientes = req.body.clientes;
+                                    dataService.nombre = req.body.nombre;
                                 }
 
-                                Events.updateEvent(dataEvent)
+                                Services.update(dataService)
                                     .then(() => {
                                         return {
                                             ok: true,
-                                            event: dataEvent,
+                                            service: dataService,
                                         };
                                     })
                                     .then(message => {
                                         res.status(200).send(message);
                                     })
                                     .catch(err => {
-                                        let data = {ok: false, error: "Error updating event."};
+                                        let data = {ok: false, error: "Error updating service."};
                                         console.log(err);
                                         res.status(400).send(data);
                                     })
@@ -259,7 +131,7 @@ router.put('/:_id', (req, res) => {
 
                 } else {
 
-                    let data = {ok: false, error: "Error updating event. ID don't match."};
+                    let data = {ok: false, error: "Error updating service."};
                     res.status(400).send(data);
 
                 }
@@ -285,7 +157,7 @@ router.put('/:_id', (req, res) => {
 });
 
 /**
- * Delete: Event by ID.
+ * Delete: Service by ID.
  * Response: { "ok": Boolean }
  * Response Error: { "ok": Boolean, "error": String }
  *
@@ -300,7 +172,7 @@ router.delete('/:_id', (req, res) => {
 
             if (dataToken.exp < new Date().getTime()) {
 
-                Events.deletebyId(req.params._id)
+                Services.deletebyId(req.params._id)
                     .then(() => {
                         return {
                             ok: true
@@ -310,7 +182,7 @@ router.delete('/:_id', (req, res) => {
                         res.status(200).send(message);
                     })
                     .catch(err => {
-                        let data = {ok: false, error: "Error removing event. Try again in a few minutes"};
+                        let data = {ok: false, error: "Error removing service. Try again in a few minutes"};
                         console.log(err);
                         res.status(400).send(data);
                     });
@@ -338,8 +210,8 @@ router.delete('/:_id', (req, res) => {
 });
 
 /**
- * GET: Event by ID.
- * Response: { "ok": Boolean, "event": Events }
+ * GET: Service by ID.
+ * Response: { "ok": Boolean, "service": Services }
  * Response Error: { "ok": Boolean, "error": String }
  *
  */
@@ -353,48 +225,26 @@ router.get('/:_id', (req, res) => {
 
             if (dataToken.exp < new Date().getTime()) {
 
-                Events.findById(req.params._id)
+                Services.findById(req.params._id)
                     .then(result => {
                         if (result.length === 0) {
-                            let data = {ok: false, error: "This event doesn't exist"};
+                            let data = {ok: false, error: "This service doesn't exist"};
                             console.log(err);
                             res.status(400).send(data);
                         }
                         return result[0];
                     })
-                    .then(dataEvent => {
-                        if (dataEvent.proveedores != null) {
-                            const listProveedores = dataEvent.proveedores.split(',');
-                            return Providers.findAll({listIds: listProveedores})
-                                .then(result => {
-                                    dataEvent.proveedores = result;
-                                    return dataEvent;
-                                })
-                        }
-                        return dataEvent;
-                    })
-                    .then(dataEvent => {
-                        if (dataEvent.clientes != null) {
-                            const listClients = dataEvent.clientes.split(',');
-                            return Clients.findAll({listIds: listClients})
-                                .then(result => {
-                                    dataEvent.clientes = result;
-                                    return dataEvent;
-                                })
-                        }
-                        return dataEvent;
-                    })
-                    .then(dataEvent => {
+                    .then(dataService => {
                         return {
                             ok: true,
-                            event: dataEvent,
+                            event: dataService,
                         };
                     })
                     .then((message) => {
                         res.status(200).send(message);
                     })
                     .catch(err => {
-                        let data = {ok: false, error: "Error recovering event. Try again in a few minutes"};
+                        let data = {ok: false, error: "Error recovering service. Try again in a few minutes"};
                         console.log(err);
                         res.status(400).send(data)
                     });
@@ -422,8 +272,8 @@ router.get('/:_id', (req, res) => {
 });
 
 /**
- * GET: Events.
- * Response: { "ok": Boolean, "event": Array<Events> }
+ * GET: Services.
+ * Response: { "ok": Boolean, "services": Array<Services> }
  * Response Error: { "ok": Boolean, "error": String }
  *
  */
@@ -440,17 +290,7 @@ router.get('/', (req, res) => {
                 if (req.body.nombre != null) {
                     params.nombre = req.body.nombre;
                 }
-                if (req.body.descripcion != null) {
-                    params.descripcion = req.body.descripcion;
-                }
-                if (req.body.fecha != null) {
-                    params.fecha = req.body.fecha;
-                }
-                if (req.body.activo != null) {
-                    params.activo = req.body.activo;
-                }
-
-                Events.findAll(params)
+                Services.findAll(params)
                     .then(result => {
                         return {
                             ok: true,
@@ -461,7 +301,7 @@ router.get('/', (req, res) => {
                         res.status(200).send(message);
                     })
                     .catch(err => {
-                        let data = {ok: false, error: "Error recovering events. Try again in a few minutes"};
+                        let data = {ok: false, error: "Error recovering service. Try again in a few minutes"};
                         console.log(err);
                         res.status(400).send(data)
                     });

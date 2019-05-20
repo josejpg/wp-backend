@@ -40,6 +40,9 @@ const findAll = (params) => {
         if (params.cp != null) {
             sqlWhere.push(`cp='${params.cp}'`);
         }
+        if (params.listIds != null) {
+            sqlWhere.push(`id  IN (${params.listIds})`);
+        }
         sql += ` WHERE ${sqlWhere.join(' AND ')}`;
     }
 
@@ -52,7 +55,11 @@ const findAll = (params) => {
  * @param id
  */
 const findById = (id) => {
-    let sql = `SELECT DISTINCT p.id, p.cif, p.nombre, p.email, p.direccion, p.poblacion, p.provincia, p.cp, p.telefono, p.movil FROM proyectobd.proveedores p WHERE p.id = ${ id }`;
+    let sql = `SELECT DISTINCT p.id, p.cif, p.nombre, p.email, p.direccion, p.poblacion, p.provincia, p.cp, p.telefono, p.movil, 
+              GROUP_CONCAT(DISTINCT ps.ref_servicio) as servicios 
+              FROM proyectobd.proveedores p 
+              INNER JOIN proyectobd.proveedores_servicios ps ON ps.ref_proveedor = p.id
+              WHERE p.id = ${ id }`;
     return db.query(sql);
 };
 

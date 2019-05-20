@@ -47,6 +47,9 @@ const findAll = (params) => {
         if (params.cp != null) {
             sqlWhere.push(`cp='${params.cp}'`);
         }
+        if (params.listIds != null) {
+            sqlWhere.push(`id  IN (${params.listIds})`);
+        }
         sql += ` WHERE ${sqlWhere.join(' AND ')}`;
     }
 

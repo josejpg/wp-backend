@@ -11,6 +11,7 @@ const myFS = require('../utils/files');
 
 // Repository
 const Providers = require('../repository/Providers');
+const Services = require('../repository/Services');
 
 // Token
 const Token = require('../services/Token');
@@ -265,26 +266,32 @@ router.get('/:_id', (req, res) => {
 
                 Providers.findById(req.params._id)
                     .then(result => {
-                        if( result.length > 0 ) {
-                            return {
-                                message: {
-                                    ok: true,
-                                    provider: result,
-                                },
-                                code: 200
-                            };
-                        }else{
-                            return {
-                                message: {
-                                    ok: false,
-                                    error: `Provider ${req.params._id} doesn't exist`
-                                },
-                                code: 400
-                            };
+                        if (result.length === 0) {
+                            let data = {ok: false, error: "This provider doesn't exist"};
+                            console.log(err);
+                            res.status(400).send(data);
                         }
+                        return result[0];
                     })
-                    .then((dataMessage) => {
-                        res.status(dataMessage.code).send(dataMessage.message);
+                    .then(dataProvider => {
+                        if (dataProvider.servicios != null) {
+                            const listServices = dataProvider.servicios.split(',');
+                            return Services.findAll({listIds: listServices})
+                                .then(result => {
+                                    dataProvider.servicios = result;
+                                    return dataProvider;
+                                });
+                        }
+                        return dataProvider;
+                    })
+                    .then(result => {
+                        return {
+                            ok: true,
+                            provider: result,
+                        };
+                    })
+                    .then((message) => {
+                        res.status(200).send(message);
                     })
                     .catch(err => {
                         let data = {ok: false, error: "Error recovering provider. Try again in a few minutes"};

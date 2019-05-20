@@ -27,10 +27,12 @@ const port = process.env.PORT || 8081;
 const routesClients = require('./core/routes/Clients');
 const routesProviders = require('./core/routes/Providers');
 const routesEvents = require('./core/routes/Events');
+const routesServices = require('./core/routes/Services');
 
 app.use('/api/v1/clients', routesClients);
 app.use('/api/v1/providers', routesProviders);
 app.use('/api/v1/events', routesEvents);
+app.use('/api/v1/services', routesServices);
 app.use('/images/', (req, res) => {
     const pathname = url.parse(req.url).pathname;
 
