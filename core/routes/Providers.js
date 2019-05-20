@@ -69,7 +69,7 @@ router.post('/login', (req, res) => {
  */
 router.post('/', (req, res) => {
 
-    Providers.register(req.body)
+    Providers.save(req.body)
         .then((result) => {
             const dataProvider = req.body;
             dataProvider.id = result.insertId;
@@ -210,7 +210,7 @@ router.delete('/:_id', (req, res) => {
 
             if (dataToken.exp < new Date().getTime()) {
 
-                Providers.deletebyId(req.params._id)
+                Providers.remove(req.params._id)
                     .then(() => {
                         let message = {
                             ok: true

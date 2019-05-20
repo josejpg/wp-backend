@@ -80,7 +80,7 @@ router.post('/login', (req, res) => {
  */
 router.post('/', (req, res) => {
 
-    Clients.register(req.body)
+    Clients.save(req.body)
         .then((result) => {
             const dataClient = req.body;
             dataClient.id = result.insertId;
@@ -223,7 +223,7 @@ router.delete('/:_id', (req, res) => {
 
             if (dataToken.exp < new Date().getTime()) {
 
-                Clients.deletebyId(req.params._id)
+                Clients.remove(req.params._id)
                     .then(() => {
                         return {
                             ok: true

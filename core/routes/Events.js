@@ -50,7 +50,7 @@ router.post('/', (req, res) => {
         if (dataToken) {
 
             if (dataToken.exp < new Date().getTime()) {
-                Events.register(req.body)
+                Events.save(req.body)
                     .then(() => {
                         return message = {
                             ok: true
@@ -239,7 +239,7 @@ router.put('/:_id', (req, res) => {
                                     dataEvent.clientes = req.body.clientes;
                                 }
 
-                                Events.updateEvent(dataEvent)
+                                Events.update(dataEvent)
                                     .then(() => {
                                         return {
                                             ok: true,
@@ -300,7 +300,7 @@ router.delete('/:_id', (req, res) => {
 
             if (dataToken.exp < new Date().getTime()) {
 
-                Events.deletebyId(req.params._id)
+                Events.remove(req.params._id)
                     .then(() => {
                         return {
                             ok: true

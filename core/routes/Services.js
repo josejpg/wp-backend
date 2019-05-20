@@ -1,12 +1,6 @@
 // Requires
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-const moment = require('moment');
-
-//Utils
-const base64 = require('../utils/encryptBase64');
-const myFS = require('../utils/files');
 
 
 // Repository
@@ -29,7 +23,6 @@ app.use(bodyParser.urlencoded({
     type: 'application/x-www-form-urlencoding'
 }));
 const router = express.Router();
-const baseImagePath = '/images/services';
 
 
 /**
@@ -48,9 +41,9 @@ router.post('/', (req, res) => {
         if (dataToken) {
 
             if (dataToken.exp < new Date().getTime()) {
-                Services.register(req.body)
+                Services.save(req.body)
                     .then(() => {
-                        return message = {
+                        return {
                             ok: true
                         };
                     })
@@ -103,7 +96,6 @@ router.put('/:_id', (req, res) => {
                         .then(result => {
                             if (result.length === 0) {
                                 let data = {ok: false, error: "Service doesn't exists"};
-                                console.log(err);
                                 res.status(400).send(data);
                             } else {
                                 const dataService = result[0];
@@ -172,7 +164,7 @@ router.delete('/:_id', (req, res) => {
 
             if (dataToken.exp < new Date().getTime()) {
 
-                Services.deletebyId(req.params._id)
+                Services.remove(req.params._id)
                     .then(() => {
                         return {
                             ok: true
@@ -229,7 +221,6 @@ router.get('/:_id', (req, res) => {
                     .then(result => {
                         if (result.length === 0) {
                             let data = {ok: false, error: "This service doesn't exist"};
-                            console.log(err);
                             res.status(400).send(data);
                         }
                         return result[0];

@@ -45,7 +45,7 @@ const findById = (id) => {
  * Save a new event
  * @param params
  */
-const register = (params) => {
+const save = (params) => {
     const columns = [];
     const values = [];
     if (params.nombre != null) {
@@ -85,7 +85,7 @@ const register = (params) => {
  * Update event with new data
  * @param params
  */
-const updateEvent = (params) => {
+const update = (params) => {
 
     const sqlUpdate = [];
     if (params.nombre != null) {
@@ -145,7 +145,7 @@ const updateEventClients = (params) => {
  * Remove event
  * @param id
  */
-const deletebyId = (id,) => {
+const remove = (id,) => {
     let sql = `DELETE FROM proyectobd.proveedores_eventos_clientes WHERE ref_evento = ${ id }`;
     return db.query(sql)
         .then(() => {
@@ -199,4 +199,4 @@ const deleteClients = (id,) => {
     return db.query(sql);
 };
 
-module.exports = {db, findAll, findById, register, updateEvent, updateEventClients, updateEventProviders, deletebyId};
+module.exports = {db, findAll, findById, save, update, updateEventClients, updateEventProviders, remove};

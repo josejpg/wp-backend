@@ -37,7 +37,7 @@ const findById = (id) => {
  * Save a new service
  * @param params
  */
-const register = (params) => {
+const save = (params) => {
     const columns = [];
     const values = [];
     if (params.nombre != null) {
@@ -67,9 +67,9 @@ const update = (params) => {
  * Remove client
  * @param id
  */
-const deletebyId = (id) => {
+const remove = (id) => {
     let sql = `DELETE FROM proyectobd.servicios WHERE id = ${ id }`;
     return db.query(sql);
 };
 
-module.exports = {db, findAll, findById, register, update, deletebyId};
+module.exports = {db, findAll, findById, save, update, remove};
