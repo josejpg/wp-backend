@@ -1,26 +1,27 @@
 {
-  "name": "WeddingPlanning",
-  "version": "1.0.0",
-  "description": "Node.js. TFG. 2º DAM Semipresencial - IES San Vicente.",
-  "main": "wedding-planning.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/josejpg/wp-backend.git"
-  },
-  "author": "Jose J. Pardines Garcia",
-  "license": "GNU General Public License v3.0",
-  "bugs": {
-    "url": "https://github.com/josejpg/wp-backend/issues"
-  },
-  "homepage": "https://github.com/josejpg/wp-backend#readme",
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "express": "^4.16.4",
-    "jsonwebtoken": "^8.4.0",
-    "moment": "^2.23.0",
-    "mysql": "^2.17.1"
-  }
+	"name": "WeddingPlanning",
+	"version": "1.0.0",
+	"description": "Node.js. TFG. 2º DAM Semipresencial - IES San Vicente.",
+	"main": "wedding-planning.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"start": "node wedding-planning.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/josejpg/wp-backend.git"
+	},
+	"author": "Jose J. Pardines Garcia",
+	"license": "GNU General Public License v3.0",
+	"bugs": {
+		"url": "https://github.com/josejpg/wp-backend/issues"
+	},
+	"homepage": "https://github.com/josejpg/wp-backend#readme",
+	"dependencies": {
+		"body-parser": "^1.18.3",
+		"express": "^4.16.4",
+		"jsonwebtoken": "^8.4.0",
+		"moment": "^2.23.0",
+		"mysql": "^2.17.1"
+	}
 }
