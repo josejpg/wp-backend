@@ -85,6 +85,12 @@ router.get( '/:_idEvent', ( req, res ) => {
 				const params = {};
 				params.evento = {};
 				params.evento.id = req.params._idEvent;
+				if( req.body.proveedor != null ){
+					params.proveedor = req.body.proveedor;
+				}
+				if( req.body.cliente != null ){
+					params.cliente = req.body.cliente;
+				}
 				Messages
 					.findByEvent( params )
 					.then( listMessages => {
@@ -103,8 +109,9 @@ router.get( '/:_idEvent', ( req, res ) => {
 												.findById( dataMessage.proveedor )
 												.then( dataProvider => {
 													dataMessage.proveedor = dataProvider[ 0 ];
+													dataMessage.propietario = false;
 													if ( dataMessage.proveedor.email === dataToken.user ) {
-														dataMessage.owner = true;
+														dataMessage.propietario = true;
 													}
 													return dataMessage;
 												} );
@@ -119,8 +126,9 @@ router.get( '/:_idEvent', ( req, res ) => {
 												.findById( dataMessage.cliente )
 												.then( dataClient => {
 													dataMessage.cliente = dataClient[ 0 ];
+													dataMessage.propietario = false;
 													if ( dataMessage.cliente.email === dataToken.user ) {
-														dataMessage.owner = true;
+														dataMessage.propietario = true;
 													}
 													return dataMessage;
 												} );

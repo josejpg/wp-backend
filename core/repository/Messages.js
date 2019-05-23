@@ -6,7 +6,17 @@ const db = require( '../services/DB' );
  * @param params
  */
 const findByEvent = ( params ) => {
-	let sql = `SELECT DISTINCT m.id, m.ref_evento as evento, m.ref_proveedor as proveedor, m.ref_cliente as cliente, m.mensaje FROM proyectobd.mensajes m WHERE m.ref_evento = ${ params.evento.id }`;
+	let sql = `SELECT DISTINCT m.id, m.ref_evento as evento, m.ref_proveedor as proveedor, m.ref_cliente as cliente, m.mensaje, m.fecha 
+				FROM proyectobd.mensajes m 
+				WHERE m.ref_evento = ${ params.evento.id }`;
+	if( params.proveedor != null ){
+		sql += ` AND ( m.ref_proveedor = ${ params.proveedor.id } 
+			OR 
+			(
+				m.ref_cliente NOT NULL 
+				AND m.ref_proveedor IS NULL 
+			)`
+	}
 	return db.query( sql );
 };
 
