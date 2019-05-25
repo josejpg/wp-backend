@@ -18,7 +18,7 @@ const findAll = (params) => {
             sqlWhere.push(`email='${params.email}'`);
         }
         if (params.password != null) {
-            sqlWhere.push(`password=MD5('${params.password}')`);
+            sqlWhere.push(`password='${params.password}'`);
         }
         if (params.nombre != null) {
             sqlWhere.push(`LOWER(nombre) LIKE '%${params.nombre.toLowerCase()}%'`);
@@ -82,7 +82,7 @@ const save = (params) => {
     }
     if (params.password != null) {
         columns.push('password');
-        values.push(`MD5('${params.password}')`);
+        values.push(`'${params.password}'`);
     } else {
         error = true;
     }
@@ -147,7 +147,7 @@ const update = (params) => {
         sqlUpdate.push(`email='${params.email}'`);
     }
     if (params.password != null) {
-        sqlUpdate.push(`password=MD5('${params.password}')`);
+        sqlUpdate.push(`password='${params.password}'`);
     }
     if (params.nombre != null) {
         sqlUpdate.push(`nombre='${params.nombre}'`);
