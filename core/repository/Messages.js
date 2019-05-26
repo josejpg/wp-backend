@@ -13,9 +13,10 @@ const findByEvent = ( params ) => {
 		sql += ` AND ( m.ref_proveedor = ${ params.proveedor.id } 
 			OR 
 			(
-				m.ref_cliente NOT NULL 
+				m.ref_cliente IS NOT NULL 
 				AND m.ref_proveedor IS NULL 
-			)`
+			)
+		)`
 	}
 	return db.query( sql );
 };
