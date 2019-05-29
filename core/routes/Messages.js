@@ -85,10 +85,10 @@ router.get( '/:_idEvent', ( req, res ) => {
 				const params = {};
 				params.evento = {};
 				params.evento.id = req.params._idEvent;
-				if( req.body.proveedor != null ){
+				if ( req.body.proveedor != null ) {
 					params.proveedor = req.body.proveedor;
 				}
-				if( req.body.cliente != null ){
+				if ( req.body.cliente != null ) {
 					params.cliente = req.body.cliente;
 				}
 				Messages

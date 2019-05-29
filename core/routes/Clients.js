@@ -57,7 +57,7 @@ router.post( '/login', ( req, res ) => {
 						   ok: false,
 						   error: "Email or password incorrect"
 					   },
-					   code: 400
+					   code: 200
 				   };
 			   }
 		   } )
@@ -183,7 +183,7 @@ router.put( '/:_id', ( req, res ) => {
 				} else {
 
 					let data = { ok: false, error: "Error updating client." };
-					res.status( 400 ).send( data );
+					res.status( 200 ).send( data );
 
 				}
 			} else {
@@ -292,7 +292,7 @@ router.get( '/:_id', ( req, res ) => {
 									   ok: false,
 									   error: `Client ${ req.params._id } doesn't exist`
 								   },
-								   code: 400
+								   code: 200
 							   };
 						   }
 					   } )

@@ -58,7 +58,7 @@ router.post( '/login', ( req, res ) => {
 							 ok: false,
 							 error: "Email or password incorrect"
 						 },
-						 code: 400
+						 code: 200
 					 };
 				 }
 			 } )
@@ -98,7 +98,7 @@ router.post( '/', ( req, res ) => {
 			 } ).catch( err => {
 		let data = { ok: false, error: "Provider couldn't be registered" };
 		console.log( err );
-		res.status( 400 ).send( data );
+		res.status( 200 ).send( data );
 	} );
 
 } );
@@ -165,7 +165,6 @@ router.put( '/:_id', ( req, res ) => {
 											  res.status( 200 ).send( message );
 										  } ).catch( err => {
 									 let data = { ok: false, error: "Error updating provider." };
-									 console.log( err );
 									 res.status( 400 ).send( data );
 								 } )
 										  .catch( err => {
@@ -182,7 +181,7 @@ router.put( '/:_id', ( req, res ) => {
 				} else {
 
 					let data = { ok: false, error: "Error updating provider." };
-					res.status( 400 ).send( data );
+					res.status( 200 ).send( data );
 
 				}
 			} else {
@@ -280,8 +279,7 @@ router.get( '/:_id', ( req, res ) => {
 						 .then( result => {
 							 if ( result.length === 0 ) {
 								 let data = { ok: false, error: "This provider doesn't exist" };
-								 console.log( err );
-								 res.status( 400 ).send( data );
+								 res.status( 200 ).send( data );
 							 }
 							 return result[ 0 ];
 						 } )

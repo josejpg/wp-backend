@@ -9,7 +9,7 @@ const findByEvent = ( params ) => {
 	let sql = `SELECT DISTINCT m.id, m.ref_evento as evento, m.ref_proveedor as proveedor, m.ref_cliente as cliente, m.mensaje, m.fecha 
 				FROM mensajes m 
 				WHERE m.ref_evento = ${ params.evento.id }`;
-	if( params.proveedor != null ){
+	if ( params.proveedor != null ) {
 		sql += ` AND ( m.ref_proveedor = ${ params.proveedor.id } 
 			OR 
 			(
@@ -42,7 +42,7 @@ const save = ( params ) => {
 		values.push( `'${ params.cliente.id }'` );
 	}
 	columns.push( 'fecha' );
-	values.push( `'${ new Date().getTime() }'` );
+	values.push( `UNIX_TIMESTAMP()` );
 	let sql = `INSERT INTO mensajes ( ${ columns.join( ',' ) } ) VALUES ( ${ values.join( ',' ) } )`;
 	return db.query( sql );
 };
