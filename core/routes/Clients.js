@@ -23,7 +23,6 @@ app.use( bodyParser.urlencoded( {
 	type: 'application/x-www-form-urlencoding'
 } ) );
 const router = express.Router();
-const baseImagePath = '/images/client';
 
 /**
  * POST: Login.
@@ -63,6 +62,53 @@ router.post( '/login', ( req, res ) => {
 		res.status( 400 ).send( data );
 	} );
 
+} );
+
+/**
+ * POST: Login by Token.
+ * Request: { "email": String, "password": String }
+ * Response: { "ok": Boolean, "token": String, "client": Clients }
+ * Response Error: { "ok": Boolean, "error": String }
+ *
+ */
+router.post( '/login/token', ( req, res ) => {
+	if ( req.headers[ 'authorization' ] != null ) {
+		const token = req.headers[ 'authorization' ].replace( 'Bearer ', '' );
+		const dataToken = Token.validateToken( token );
+		if ( dataToken ) {
+			if ( dataToken.exp < new Date().getTime() ) {
+				Clients.findAll( { email: dataToken.user } )
+					   .then( ( result ) => {
+						   if ( result.length > 0 ) {
+							   return {
+								   message: {
+									   ok: true,
+									   token: Token.generateToken( result[ 0 ].email ),
+									   cliente: result[ 0 ]
+								   },
+								   code: 200
+							   };
+						   } else {
+							   return {
+								   message: {
+									   ok: false,
+									   error: "Email or password incorrect"
+								   },
+								   code: 200
+							   };
+						   }
+					   } )
+					   .then( ( dataMessage ) => {
+						   res.status( dataMessage.code ).send( dataMessage.message );
+					   } ).catch( err => {
+					let data = { ok: false, error: "Email or password incorrect" };
+					console.log( err );
+					res.status( 400 ).send( data );
+
+				} );
+			}
+		}
+	}
 } );
 
 /**
