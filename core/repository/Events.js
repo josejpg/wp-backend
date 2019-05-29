@@ -7,7 +7,7 @@ const db = require('../services/DB');
  */
 const findAll = (params) => {
 
-    let sql = "SELECT DISTINCT e.id, e.nombre, e.descripcion, e.fecha, e.activo FROM proyectobd.eventos e";
+    let sql = "SELECT DISTINCT e.id, e.nombre, e.descripcion, e.fecha, e.activo FROM eventos e";
     if (Object.keys(params).length > 0) {
         const sqlWhere = [];
         if (params.nombre != null) {
@@ -35,8 +35,8 @@ const findAll = (params) => {
  */
 const findById = (id) => {
     let sql = `SELECT DISTINCT e.id, e.nombre, e.descripcion, e.fecha, e.activo, GROUP_CONCAT(DISTINCT pec.ref_proveedor) as proveedores, GROUP_CONCAT(DISTINCT pec.ref_cliente) as clientes
-                FROM proyectobd.eventos e
-                LEFT JOIN proyectobd.proveedores_eventos_clientes pec ON pec.ref_evento = e.id
+                FROM eventos e
+                LEFT JOIN proveedores_eventos_clientes pec ON pec.ref_evento = e.id
                 WHERE e.id = ${ id }`;
     return db.query(sql)
 };
@@ -65,7 +65,7 @@ const save = (params) => {
         values.push(`'${params.activo}'`);
     }
 
-    let sql = `INSERT INTO proyectobd.eventos ( ${columns.join(',')} ) VALUES ( ${values.join(',')} )`;
+    let sql = `INSERT INTO eventos ( ${columns.join(',')} ) VALUES ( ${values.join(',')} )`;
     return db.query(sql)
         .then(result => {
             if (params.clientes != null && params.clientes.length > 0) {
@@ -101,7 +101,7 @@ const update = (params) => {
         sqlUpdate.push(`activo='${params.activo}'`);
     }
 
-    let sql = `UPDATE proyectobd.eventos SET ${sqlUpdate.join(',')} WHERE id = ${params.id}`;
+    let sql = `UPDATE eventos SET ${sqlUpdate.join(',')} WHERE id = ${params.id}`;
     return db.query(sql)
         .then(() => {
             updateEventProviders(params);
@@ -146,10 +146,10 @@ const updateEventClients = (params) => {
  * @param id
  */
 const remove = (id,) => {
-    let sql = `DELETE FROM proyectobd.proveedores_eventos_clientes WHERE ref_evento = ${ id }`;
+    let sql = `DELETE FROM proveedores_eventos_clientes WHERE ref_evento = ${ id }`;
     return db.query(sql)
         .then(() => {
-            sql = `DELETE FROM proyectobd.clientes WHERE id = ${ id }`;
+            sql = `DELETE FROM clientes WHERE id = ${ id }`;
             return db.query(sql);
         });
 
@@ -163,7 +163,7 @@ const remove = (id,) => {
 const insertProviders = (id, listProviders) => {
     let sql = '';
     for (const i in listProviders) {
-        sql = `INSERT INTO proyectobd.proveedores_eventos_clientes ( ref_proveedor, ref_evento ) VALUES( '${listProviders[i].id}', '${id}' ); `;
+        sql = `INSERT INTO proveedores_eventos_clientes ( ref_proveedor, ref_evento ) VALUES( '${listProviders[i].id}', '${id}' ); `;
         db.query(sql);
     }
 };
@@ -173,7 +173,7 @@ const insertProviders = (id, listProviders) => {
  * @param id
  */
 const deleteProviders = (id) => {
-    const sql = `DELETE FROM proyectobd.proveedores_eventos_clientes WHERE ref_evento = ${id} AND ref_proveedor IS NOT NULL`;
+    const sql = `DELETE FROM proveedores_eventos_clientes WHERE ref_evento = ${id} AND ref_proveedor IS NOT NULL`;
     return db.query(sql);
 };
 
@@ -185,7 +185,7 @@ const deleteProviders = (id) => {
 const insertClients = (id, listClients) => {
     let sql = '';
     for (const i in listClients) {
-        sql = `INSERT INTO proyectobd.proveedores_eventos_clientes ( ref_cliente, ref_evento ) VALUES( '${listClients[i].id}', '${id}' ); `;
+        sql = `INSERT INTO proveedores_eventos_clientes ( ref_cliente, ref_evento ) VALUES( '${listClients[i].id}', '${id}' ); `;
         db.query(sql)
     }
 };
@@ -195,7 +195,7 @@ const insertClients = (id, listClients) => {
  * @param id
  */
 const deleteClients = (id,) => {
-    const sql = `DELETE FROM proyectobd.proveedores_eventos_clientes WHERE ref_evento = ${id} AND ref_cliente IS NOT NULL`;
+    const sql = `DELETE FROM proveedores_eventos_clientes WHERE ref_evento = ${id} AND ref_cliente IS NOT NULL`;
     return db.query(sql);
 };
 

@@ -7,7 +7,7 @@ const db = require('../services/DB');
  */
 const findAll = (params) => {
 
-    let sql = "SELECT DISTINCT p.id, p.cif, p.nombre, p.email, p.direccion, p.poblacion, p.provincia, p.cp, p.telefono, p.movil FROM proyectobd.proveedores p";
+    let sql = "SELECT DISTINCT p.id, p.cif, p.nombre, p.email, p.direccion, p.poblacion, p.provincia, p.cp, p.telefono, p.movil FROM proveedores p";
     if (Object.keys(params).length > 0) {
         const sqlWhere = [];
         if (params.email != null) {
@@ -57,8 +57,8 @@ const findAll = (params) => {
 const findById = (id) => {
     let sql = `SELECT DISTINCT p.id, p.cif, p.nombre, p.email, p.direccion, p.poblacion, p.provincia, p.cp, p.telefono, p.movil, 
               GROUP_CONCAT(DISTINCT ps.ref_servicio) as servicios 
-              FROM proyectobd.proveedores p 
-              INNER JOIN proyectobd.proveedores_servicios ps ON ps.ref_proveedor = p.id
+              FROM proveedores p 
+              INNER JOIN proveedores_servicios ps ON ps.ref_proveedor = p.id
               WHERE p.id = ${ id }`;
     return db.query(sql);
 };
@@ -117,7 +117,7 @@ const save = (params) => {
         values.push(`'${params.cp}'`);
     }
     if (!error) {
-        let sql = `INSERT INTO proyectobd.proveedores ( ${columns.join(',')} ) VALUES ( ${values.join(',')} )`;
+        let sql = `INSERT INTO proveedores ( ${columns.join(',')} ) VALUES ( ${values.join(',')} )`;
         return db.query(sql);
 
     } else {
@@ -164,7 +164,7 @@ const update = (params) => {
         sqlUpdate.push(`cp='${params.cp}'`);
     }
 
-    let sql = `UPDATE proyectobd.proveedores SET ${sqlUpdate.join(',')} WHERE id = ${params.id}`;
+    let sql = `UPDATE proveedores SET ${sqlUpdate.join(',')} WHERE id = ${params.id}`;
     return db.query(sql);
 };
 
@@ -173,7 +173,7 @@ const update = (params) => {
  * @param id
  */
 const remove = (id) => {
-    let sql = `DELETE FROM proyectobd.proveedores WHERE id = ${ id }`;
+    let sql = `DELETE FROM proveedores WHERE id = ${ id }`;
     return db.query(sql);
 };
 

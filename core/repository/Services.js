@@ -7,7 +7,7 @@ const db = require('../services/DB');
  */
 const findAll = (params) => {
 
-    let sql = "SELECT DISTINCT s.id, s.nombre FROM proyectobd.servicios s";
+    let sql = "SELECT DISTINCT s.id, s.nombre FROM servicios s";
 
     if (Object.keys(params).length > 0) {
         const sqlWhere = [];
@@ -29,7 +29,7 @@ const findAll = (params) => {
  * @param id
  */
 const findById = (id) => {
-    let sql = `SELECT DISTINCT s.id, s.nombre FROM proyectobd.servicios s WHERE s.id = ${ id }`;
+    let sql = `SELECT DISTINCT s.id, s.nombre FROM servicios s WHERE s.id = ${ id }`;
     return db.query(sql);
 };
 
@@ -44,7 +44,7 @@ const save = (params) => {
         columns.push('nombre');
         values.push(`'${params.nombre}'`);
     }
-    let sql = `INSERT INTO proyectobd.servicios ( ${columns.join(',')} ) VALUES ( ${values.join(',')} )`;
+    let sql = `INSERT INTO servicios ( ${columns.join(',')} ) VALUES ( ${values.join(',')} )`;
     return db.query(sql);
 };
 
@@ -59,7 +59,7 @@ const update = (params) => {
         sqlUpdate.push(`nombre='${params.nombre}'`);
     }
 
-    let sql = `UPDATE proyectobd.servicios SET ${sqlUpdate.join(',')} WHERE id = ${params.id}`;
+    let sql = `UPDATE servicios SET ${sqlUpdate.join(',')} WHERE id = ${params.id}`;
     return db.query(sql);
 };
 
@@ -68,7 +68,7 @@ const update = (params) => {
  * @param id
  */
 const remove = (id) => {
-    let sql = `DELETE FROM proyectobd.servicios WHERE id = ${ id }`;
+    let sql = `DELETE FROM servicios WHERE id = ${ id }`;
     return db.query(sql);
 };
 

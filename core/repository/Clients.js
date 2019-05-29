@@ -7,7 +7,7 @@ const db = require('../services/DB');
  */
 const findAll = (params) => {
 
-    let sql = "SELECT DISTINCT c.id, c.dni, c.email, c.nombre, c.apellidos, c.direccion, c.poblacion, c.provincia, c.cp, c.fnac, c.edad, c.telefono, c.movil FROM proyectobd.clientes c";
+    let sql = "SELECT DISTINCT c.id, c.dni, c.email, c.nombre, c.apellidos, c.direccion, c.poblacion, c.provincia, c.cp, c.fnac, c.edad, c.telefono, c.movil FROM clientes c";
 
     if (Object.keys(params).length > 0) {
         const sqlWhere = [];
@@ -62,7 +62,7 @@ const findAll = (params) => {
  * @param id
  */
 const findById = (id) => {
-    let sql = `SELECT DISTINCT c.id, c.dni, c.email, c.nombre, c.apellidos, c.direccion, c.poblacion, c.provincia, c.cp, c.fnac, c.edad, c.telefono, c.movil FROM proyectobd.clientes c WHERE c.id = ${ id }`;
+    let sql = `SELECT DISTINCT c.id, c.dni, c.email, c.nombre, c.apellidos, c.direccion, c.poblacion, c.provincia, c.cp, c.fnac, c.edad, c.telefono, c.movil FROM clientes c WHERE c.id = ${ id }`;
     return db.query(sql);
 };
 
@@ -128,7 +128,7 @@ const save = (params) => {
         values.push(`'${params.cp}'`);
     }
     if (!error) {
-        let sql = `INSERT INTO proyectobd.clientes ( ${columns.join(',')} ) VALUES ( ${values.join(',')} )`;
+        let sql = `INSERT INTO clientes ( ${columns.join(',')} ) VALUES ( ${values.join(',')} )`;
         return db.query(sql);
     } else {
         let data = {ok: false, error: "Error registering client. Email and password are must fields."};
@@ -180,7 +180,7 @@ const update = (params) => {
         sqlUpdate.push(`cp='${params.cp}'`);
     }
 
-    let sql = `UPDATE proyectobd.clientes SET ${sqlUpdate.join(',')} WHERE id = ${params.id}`;
+    let sql = `UPDATE clientes SET ${sqlUpdate.join(',')} WHERE id = ${params.id}`;
     return db.query(sql);
 };
 
@@ -189,7 +189,7 @@ const update = (params) => {
  * @param id
  */
 const remove = (id) => {
-    let sql = `DELETE FROM proyectobd.clientes WHERE id = ${ id }`;
+    let sql = `DELETE FROM clientes WHERE id = ${ id }`;
     return db.query(sql);
 };
 

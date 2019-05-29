@@ -2,10 +2,10 @@
 const db = require('mysql');
 
 const config = {
-    host: "176.31.255.91",
-    database: "proyectobd",
-    user: "proyectobd_user",
-    password: "dIfc46?4"
+    host: "sql7.freesqldatabase.com",
+    database: "sql7293710",
+    user: "sql7293710",
+    password: "9TiBAqdCNW"
 };
 class Database {
     constructor( config ) {
