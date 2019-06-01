@@ -438,6 +438,26 @@ router.get( '/client/:_id', ( req, res ) => {
 						  return result;
 					  } )
 					  .then( listEvents => {
+						  const listPromises = [];
+						  listEvents.map( dataEvent => {
+							  listPromises.push(
+								  Promise.resolve( () => {
+									  if ( dataEvent.clientes != null ) {
+										  const listClients = dataEvent.clientes.split( ',' );
+										  return Clients.findAll( { listIds: listClients } )
+														.then( result => {
+															dataEvent.clientes = result;
+															return dataEvent;
+														} )
+									  } else {
+										  return dataEvent;
+									  }
+								  } )
+							  )
+						  } );
+						  return Promise.all( listPromises ).then( result => result );
+					  } )
+					  .then( listEvents => {
 						  return {
 							  ok: true,
 							  events: listEvents,
@@ -498,6 +518,27 @@ router.get( '/provider/:_id', ( req, res ) => {
 							  res.status( 200 ).send( data );
 						  }
 						  return result;
+					  } )
+
+					  .then( listEvents => {
+						  const listPromises = [];
+						  listEvents.map( dataEvent => {
+							  listPromises.push(
+								  Promise.resolve( () => {
+									  if ( dataEvent.proveedores != null ) {
+										  const listProviders = dataEvent.proveedores.split( ',' );
+										  return Providers.findAll( { listIds: listProviders } )
+														  .then( result => {
+															  dataEvent.proveedores = result;
+															  return dataEvent;
+														  } )
+									  } else {
+										  return dataEvent;
+									  }
+								  } )
+							  )
+						  } );
+						  return Promise.all( listPromises ).then( result => result );
 					  } )
 					  .then( listEvents => {
 						  return {
@@ -569,7 +610,7 @@ router.get( '/', ( req, res ) => {
 					  .then( result => {
 						  return {
 							  ok: true,
-							  event: result,
+							  events: result,
 						  };
 					  } )
 					  .then( ( message ) => {

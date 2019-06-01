@@ -42,7 +42,7 @@ router.post( '/login', ( req, res ) => {
 						 message: {
 							 ok: true,
 							 token: Token.generateToken( result[ 0 ].email ),
-							 proveedor: result[ 0 ]
+							 provider: result[ 0 ]
 						 },
 						 code: 200
 					 };
@@ -83,7 +83,7 @@ router.post( '/', ( req, res ) => {
 				 let message = {
 					 ok: true,
 					 token: Token.generateToken( dataProvider.email ),
-					 provider: dataProvider
+					 providers: dataProvider
 				 };
 				 return message;
 			 } )
@@ -370,7 +370,7 @@ router.get( '/', ( req, res ) => {
 						 .then( result => {
 							 let message = {
 								 ok: true,
-								 provider: result,
+								 providers: result,
 							 };
 							 return message;
 						 } )

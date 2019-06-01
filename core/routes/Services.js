@@ -228,7 +228,7 @@ router.get( '/:_id', ( req, res ) => {
 						.then( dataService => {
 							return {
 								ok: true,
-								event: dataService,
+								service: dataService,
 							};
 						} )
 						.then( ( message ) => {
@@ -285,7 +285,7 @@ router.get( '/', ( req, res ) => {
 						.then( result => {
 							return {
 								ok: true,
-								event: result,
+								services: result,
 							};
 						} )
 						.then( ( message ) => {

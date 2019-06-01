@@ -40,7 +40,7 @@ router.post( '/login', ( req, res ) => {
 					   message: {
 						   ok: true,
 						   token: Token.generateToken( result[ 0 ].email ),
-						   cliente: result[ 0 ]
+						   client: result[ 0 ]
 					   },
 					   code: 200
 				   };
@@ -84,7 +84,7 @@ router.post( '/login/token', ( req, res ) => {
 								   message: {
 									   ok: true,
 									   token: Token.generateToken( result[ 0 ].email ),
-									   cliente: result[ 0 ]
+									   client: result[ 0 ]
 								   },
 								   code: 200
 							   };
@@ -322,7 +322,7 @@ router.get( '/:_id', ( req, res ) => {
 							   return {
 								   message: {
 									   ok: true,
-									   client: result,
+									   client: result[ 0 ],
 								   },
 								   code: 200
 							   };
@@ -369,7 +369,7 @@ router.get( '/:_id', ( req, res ) => {
 
 /**
  * GET: Clients.
- * Response: { "ok": Boolean, "clientes": Array<Clients> }
+ * Response: { "ok": Boolean, "clients": Array<Clients> }
  * Response Error: { "ok": Boolean, "error": String }
  *
  */
@@ -415,7 +415,7 @@ router.get( '/', ( req, res ) => {
 					   .then( result => {
 						   return {
 							   ok: true,
-							   client: result,
+							   clients: result,
 						   };
 					   } )
 					   .then( ( message ) => {
