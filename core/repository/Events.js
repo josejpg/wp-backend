@@ -46,7 +46,7 @@ const findById = ( id ) => {
  * @param id
  */
 const findByClientId = ( id ) => {
-	let sql = `SELECT DISTINCT e.id, e.nombre, e.descripcion, e.fecha, e.activo, GROUP_CONCAT(DISTINCT pec.ref_proveedor) as proveedoresID
+	let sql = `SELECT DISTINCT e.id, e.nombre, e.descripcion, e.fecha, e.activo
                 FROM eventos e
                 LEFT JOIN proveedores_eventos_clientes pec ON pec.ref_evento = e.id
                 WHERE pec.ref_cliente = ${ id }`;
@@ -58,10 +58,11 @@ const findByClientId = ( id ) => {
  * @param id
  */
 const findByProviderId = ( id ) => {
-	let sql = `SELECT DISTINCT e.id, e.nombre, e.descripcion, e.fecha, e.activo, GROUP_CONCAT(DISTINCT pec.ref_cliente) as clientesID
+	let sql = `SELECT DISTINCT e.id, e.nombre, e.descripcion, e.fecha, e.activo
                 FROM eventos e
                 LEFT JOIN proveedores_eventos_clientes pec ON pec.ref_evento = e.id
-                WHERE pec.ref_proveedor = ${ id }`;
+                WHERE pec.ref_proveedor = ${ id }
+                AND pec.ref_evento IS NOT NULL `;
 	return db.query( sql )
 };
 
