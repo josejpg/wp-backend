@@ -236,7 +236,7 @@ router.put( '/:_id', ( req, res ) => {
 										.then( () => {
 											return {
 												ok: true,
-												event: dataEvent,
+												event: req.body,
 											};
 										} )
 										.then( message => {
