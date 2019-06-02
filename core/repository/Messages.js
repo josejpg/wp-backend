@@ -42,7 +42,7 @@ const save = ( params ) => {
 		values.push( `'${ params.cliente.id }'` );
 	}
 	columns.push( 'fecha' );
-	values.push( `UNIX_TIMESTAMP()` );
+	values.push( `UNIX_TIMESTAMP( DATE_ADD( NOW(), INTERVAL 2 HOUR ) )` );
 	let sql = `INSERT INTO mensajes ( ${ columns.join( ',' ) } ) VALUES ( ${ values.join( ',' ) } )`;
 	return db.query( sql );
 };
