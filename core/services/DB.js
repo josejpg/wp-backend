@@ -2,10 +2,10 @@
 const db = require( 'mysql' );
 
 const config = {
-	host: "eu-cdbr-west-02.cleardb.net",
-	database: "heroku_6ade35d3b5e2fdc",
-	user: "b3fd4713498614",
-	password: "4850f518"
+	host: "remotemysql.com",
+	database: "y6CQ6X1U7Z",
+	user: "y6CQ6X1U7Z",
+	password: "u7oUzvMGHu"
 };
 
 class Database {
