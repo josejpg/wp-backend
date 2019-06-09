@@ -326,6 +326,61 @@ router.get( '/:_id', ( req, res ) => {
 } );
 
 /**
+ * GET: Providers by Service.
+ * Response: { "ok": Boolean, "providers": Array<Providers> }
+ * Response Error: { "ok": Boolean, "error": String }
+ *
+ */
+router.get( '/service/:_id', ( req, res ) => {
+
+	if ( req.headers[ 'authorization' ] != null ) {
+		const token = req.headers[ 'authorization' ].replace( 'Bearer ', '' );
+		const dataToken = Token.validateToken( token );
+
+		if ( dataToken ) {
+
+			if ( dataToken.exp < new Date().getTime() ) {
+
+				Providers.findByServiceId( req.params._id  )
+						 .then( result => {
+							 let message = {
+								 ok: true,
+								 providers: result,
+							 };
+							 return message;
+						 } )
+						 .then( ( message ) => {
+							 res.status( 200 ).send( message );
+						 } )
+						 .catch( err => {
+							 let data = { ok: false, error: "Error recovering providers. Try again in a few minutes" };
+							 console.log( err );
+							 res.status( 400 ).send( data )
+						 } );
+
+			} else {
+
+				let data = { ok: false, error: "Token expired" };
+				res.status( 403 ).send( data );
+
+			}
+
+		} else {
+
+			let data = { ok: false, error: "Token is not correct" };
+			res.status( 403 ).send( data );
+
+		}
+	} else {
+
+		let data = { ok: false, error: "Token is not correct" };
+		res.status( 403 ).send( data );
+
+	}
+
+} );
+
+/**
  * GET: Providers.
  * Response: { "ok": Boolean, "providers": Array<Providers> }
  * Response Error: { "ok": Boolean, "error": String }

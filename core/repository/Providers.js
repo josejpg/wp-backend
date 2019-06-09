@@ -64,6 +64,18 @@ const findById = ( id ) => {
 };
 
 /**
+ * Get a provider by service ID
+ * @param id
+ */
+const findByServiceId = ( id ) => {
+	let sql = `SELECT DISTINCT p.id, p.cif, p.nombre, p.email, p.direccion, p.poblacion, p.provincia, p.cp, p.telefono, p.movil 
+              FROM proveedores p 
+              INNER JOIN proveedores_servicios ps ON ps.ref_proveedor = p.id
+              WHERE ps.ref_servicio = ${ id }`;
+	return db.query( sql );
+};
+
+/**
  * Save a new provider
  * @param params
  */
@@ -177,4 +189,4 @@ const remove = ( id ) => {
 	return db.query( sql );
 };
 
-module.exports = { db, findAll, findById, save, update, remove };
+module.exports = { db, findAll, findById, findByServiceId, save, update, remove };
