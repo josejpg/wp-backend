@@ -194,6 +194,8 @@ router.get( '/chats/:_idClient', ( req, res ) => {
 									.findById( dataChat.evento )
 									.then( dataEvent => {
 										dataChat.evento = dataEvent[ 0 ];
+										dataChat.evento.proveedores = [];
+										dataChat.evento.clientes = [];
 										return dataChat;
 									} )
 									.then( dataChat => {
@@ -201,6 +203,7 @@ router.get( '/chats/:_idClient', ( req, res ) => {
 												.findById( dataChat.proveedor )
 												.then( dataProvider => {
 													dataChat.proveedor = dataProvider[ 0 ];
+													dataChat.proveedor.servicios = [];
 													return dataChat;
 												} );
 									} )
