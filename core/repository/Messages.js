@@ -27,8 +27,9 @@ const findByEvent = ( params ) => {
  */
 const findClientChat = ( params ) => {
 	let sql = `SELECT DISTINCT pec.ref_evento as evento, pec.ref_proveedor as proveedor
-				FROM proveedores_eventos_clientes pec
-				WHERE pec.ref_proveedor IS NOT NULL
+				FROM proveedores_eventos_clientes pec, eventos e
+				WHERE e.id = pec.ref_evento 
+				AND pec.ref_proveedor IS NOT NULL
 				AND pec.ref_evento IN (SELECT DISTINCT pec2.ref_evento 
 									FROM proveedores_eventos_clientes pec2 
 									WHERE pec2.ref_cliente = ${ params.cliente.id } )
