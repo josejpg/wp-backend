@@ -169,4 +169,71 @@ router.get( '/:_idEvent', ( req, res ) => {
 	}
 } );
 
+/**
+ * GET: Chats.
+ * Response: { "ok": Boolean, "messages": Array<Messages> }
+ * Response Error: { "ok": Boolean, "error": String }
+ *
+ */
+router.get( '/chats/:_idClient', ( req, res ) => {
+	if ( req.headers[ 'authorization' ] != null ) {
+		const token = req.headers[ 'authorization' ].replace( 'Bearer ', '' );
+		const dataToken = Token.validateToken( token );
+		if ( dataToken ) {
+			if ( dataToken.exp < new Date().getTime() ) {
+				const params = {};
+				params.cliente = {};
+				params.cliente.id = req.params._idClient;
+				Messages
+					.findClientChat( params )
+					.then( listChats => {
+						const listPromises = [];
+						listChats.map( dataChat => {
+							listPromises.push(
+								Events
+									.findById( dataChat.evento )
+									.then( dataEvent => {
+										dataChat.evento = dataEvent[ 0 ];
+										return dataChat;
+									} )
+									.then( dataChat => {
+											return Providers
+												.findById( dataChat.proveedor )
+												.then( dataProvider => {
+													dataChat.proveedor = dataProvider[ 0 ];
+													return dataChat;
+												} );
+									} )
+							);
+						} );
+						return Promise.all( listPromises ).then( result => result );
+					} )
+					.then( listChats => {
+						return {
+							ok: true,
+							chats: listChats,
+						};
+					} )
+					.then( ( message ) => {
+						res.status( 200 ).send( message );
+					} )
+					.catch( err => {
+						let data = { ok: false, error: "Error recovering service. Try again in a few minutes" };
+						console.log( err );
+						res.status( 400 ).send( data )
+					} );
+			} else {
+				let data = { ok: false, error: "Token expired" };
+				res.status( 403 ).send( data );
+			}
+		} else {
+			let data = { ok: false, error: "Token is not correct" };
+			res.status( 403 ).send( data );
+		}
+	} else {
+		let data = { ok: false, error: "Token is not correct" };
+		res.status( 403 ).send( data );
+	}
+} );
+
 module.exports = router;
