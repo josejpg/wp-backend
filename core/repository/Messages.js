@@ -6,7 +6,7 @@ const db = require( '../services/DB' );
  * @param params
  */
 const findByEvent = ( params ) => {
-	let sql = `SELECT DISTINCT m.id, m.ref_evento as evento, m.ref_proveedor as proveedor, m.ref_cliente as cliente, m.mensaje, m.fecha 
+	let sql = `SELECT m.id, m.ref_evento as evento, m.ref_proveedor as proveedor, m.ref_cliente as cliente, m.mensaje, m.fecha 
 				FROM mensajes m 
 				WHERE m.ref_evento = ${ params.evento.id }`;
 	if ( params.proveedor != null ) {
@@ -16,7 +16,8 @@ const findByEvent = ( params ) => {
 				m.ref_cliente IS NOT NULL 
 				AND m.ref_proveedor IS NULL 
 			)
-		)`
+		)
+		ORDER BY m.fecha ASC`
 	}
 	return db.query( sql );
 };
@@ -26,14 +27,15 @@ const findByEvent = ( params ) => {
  * @param params
  */
 const findClientChat = ( params ) => {
-	let sql = `SELECT DISTINCT pec.ref_evento as evento, pec.ref_proveedor as proveedor
+	let sql = `SELECT pec.ref_evento as evento, pec.ref_proveedor as proveedor
 				FROM proveedores_eventos_clientes pec, eventos e
 				WHERE e.id = pec.ref_evento 
 				AND pec.ref_proveedor IS NOT NULL
 				AND pec.ref_evento IN (SELECT DISTINCT pec2.ref_evento 
 									FROM proveedores_eventos_clientes pec2 
 									WHERE pec2.ref_cliente = ${ params.cliente.id } )
-                                    AND e.activo = 1;`;
+				AND e.activo = 1
+				ORDER BY e.fecha ASC`;
 	return db.query( sql );
 };
 
