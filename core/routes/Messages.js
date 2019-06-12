@@ -101,6 +101,8 @@ router.get( '/:_idEvent', ( req, res ) => {
 									.findById( dataMessage.evento )
 									.then( dataEvent => {
 										dataMessage.evento = dataEvent[ 0 ];
+										dataMessage.evento.clientes = [];
+										dataMessage.evento.proveedores = [];
 										return dataMessage;
 									} )
 									.then( dataMessage => {
@@ -109,6 +111,7 @@ router.get( '/:_idEvent', ( req, res ) => {
 												.findById( dataMessage.proveedor )
 												.then( dataProvider => {
 													dataMessage.proveedor = dataProvider[ 0 ];
+													dataMessage.proveedor.servicios = [];
 													dataMessage.propietario = false;
 													if ( dataMessage.proveedor.email === dataToken.user ) {
 														dataMessage.propietario = true;
