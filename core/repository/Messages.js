@@ -55,7 +55,9 @@ const save = ( params ) => {
 		 params.proveedor.id != null ) {
 		columns.push( 'ref_proveedor' );
 		values.push( `'${ params.proveedor.id }'` );
-	} else {
+	}
+	if ( params.cliente != null &&
+		 params.cliente.id != null ) {
 		columns.push( 'ref_cliente' );
 		values.push( `'${ params.cliente.id }'` );
 	}
